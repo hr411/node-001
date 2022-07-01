@@ -1,22 +1,25 @@
-//기본모듈
-
 const http = require('http');
 
-http.createServer();
+const hostname = '127.0.0.1';
+const port = 3000;
 
-//사용자 정의 모듈
-const math = require('./math.js');
+const server = http.createServer((req, res) => {
 
-const result = math.sum(1,2);
+    if (req.url === '/'){
+        res.statusCode = 200; //성공
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('Hello World!\n'); 
+    } else if(req.url ==='/users'){
+        res.statusCode = 200; //성공
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('User list'); 
+    } else {
+        res.statusCode = 404; //페이지 없음
+        res.end('Not Found');
+    }
+    
+});
 
-//console.log(result);
-
-//readFileSync (동기)
-const fs = require('fs');
-
-//const data = fs.readFileSync('./data.txt', 'utf-8')
-
-//readFile (비동기) - 선호
-const data = fs.readFile('./data.txt', 'utf-8', function(err,data){
-    console.log(data);
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
