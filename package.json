@@ -2,5 +2,23 @@
   "dependencies": {
     "express": "^4.18.1",
     "morgan": "^1.10.0"
-  }
+  },
+  "name": "001",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hr411/node-001.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hr411/node-001/issues"
+  },
+  "homepage": "https://github.com/hr411/node-001#readme",
+  "description": ""
 }
