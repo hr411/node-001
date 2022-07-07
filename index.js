@@ -1,6 +1,6 @@
 var express = require('express')
-var app = express()
-var port = 3000
+var app = express();
+var port = 3000;
 var morgan =  require('morgan');
 var users = [
    {id: 1, name: 'alice'},
@@ -18,6 +18,7 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+module.exports = app;
 /*
 2XX: 자, 여기있어
 200: 성공(success), GET, PUT
