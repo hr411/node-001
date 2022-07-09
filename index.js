@@ -3,14 +3,19 @@ const { reporters } = require('mocha');
 var app = express();
 var port = 3000;
 var morgan =  require('morgan');
+const { isExternal } = require('util/types');
 const { runInNewContext } = require('vm');
 var users = [
    {id: 1, name: 'alice'},
    {id: 2, name: 'bek'},
    {id: 3, name: 'chris'} 
 ];  
+var bodyParse = require('body-parser');
 
 app.use(morgan('dev'));
+app.use(bodyParse.json()) // for parsing application/json
+app.use(bodyParse.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 
 app.get('/users', (req, res) => {
     req.query.limit = req.query.limit || 10; //limit 없으면 10 할당
@@ -32,6 +37,35 @@ app.get('/users/:id', function(req, res) {
     
     res.json(user);
 });
+
+app.delete('/users/:id', (req,res)=> {
+    const id = parseInt(req.params.id, 10);
+    if(Number.isNaN(id)) return res.status(400).end();
+
+    users = users.filter((user)=> { 
+        return user.id !== id
+    });
+    res.status(204).end();
+});
+
+app.post('/users', (req, res)=> {
+    //console.log('### req.body.name', req.body.name)
+    const name = req.body.name;
+    //console.log('### name', name)
+
+    if(!name) return res.status(400).end();
+    //console.log('### users', users);
+    const isConflic = users.filter((user) => { 
+        return user.name === name
+    }).length;
+    //console.log('### users', users)
+    if(isConflic) return res.status(409).end();
+
+    const id = Date.now();
+    const user = {id, name};
+    users.push(user);
+    res.status(201).json(user);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
