@@ -8,8 +8,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha index.spec.js --timeout 10000",
-    "start": "node index.js"
+    "test": "NODE_ENV=test mocha api/user/user.spec.js --timeout 10000",
+    "start": "node bin/www.js"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
-const app = require('./index');
+//테스트 코드
+const app = require('../..');
 const request = require('supertest');
 const should = require('should');
-const { isReadable } = require('stream');
 
 describe('GET /users는', ()=> {
     describe('성공시', ()=> {
