@@ -1,9 +1,5 @@
 //api 로직
-var users = [
-    {id: 1, name: 'alice'},
-    {id: 2, name: 'bek'},
-    {id: 3, name: 'chris'} 
- ];  
+const models = require('../../models');
 
 const index = (req, res) => {
     req.query.limit = req.query.limit || 10; //limit 없으면 10 할당
@@ -11,7 +7,14 @@ const index = (req, res) => {
     if (Number.isNaN(limit)){
         return res.status(400).end();
     }
-    res.json(users.slice(0, limit));
+
+    models.User
+        .findAll({
+            limit: limit
+        })
+        .then(users=> {
+            res.json(users);
+        })
 }
 
 const show = function(req, res) {

@@ -15,6 +15,7 @@ app.use(bodyParse.urlencoded({ extended: true })) // for parsing application/x-w
 app.use('/users',user);
 
 module.exports = app;
+
 /*
 2XX: 자, 여기있어
 200: 성공(success), GET, PUT
