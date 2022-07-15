@@ -11,8 +11,7 @@ const index = (req, res) => {
     models.User
         .findAll({
             limit: limit
-        })
-        .then(users=> {
+        }).then(users=> {
             res.json(users);
         })
 }
@@ -22,21 +21,31 @@ const show = function(req, res) {
     //console.log('### id', id);
     if (Number.isNaN(id)) return res.status(400).end();
     
-    const user = users.filter((user) => { return user.id === id })[0];
+    //const user = users.filter((user) => { return user.id === id })[0];
     //console.log('### user', user)
-    if(!user) return res.status(404).end();
-    
-    res.json(user);
+
+    models.User
+        .findOne({
+            where: {id}
+        }).then(user=>{
+        if(!user) return res.status(404).end();
+        res.json(user);
+    });
 };
 
 const destroy = (req,res)=> {
     const id = parseInt(req.params.id, 10);
     if(Number.isNaN(id)) return res.status(400).end();
 
-    users = users.filter((user)=> { 
-        return user.id !== id
-    });
-    res.status(204).end();
+    // users = users.filter((user)=> { 
+    //     return user.id !== id
+    // });
+
+    models.User.destroy({
+        where: {id}
+    }).then(()=> {
+        res.status(204).end();
+    });   
 };
 
 const create = (req, res)=> {
@@ -45,17 +54,26 @@ const create = (req, res)=> {
     //console.log('### name', name)
 
     if(!name) return res.status(400).end();
-    //console.log('### users', users);
-    const isConflic = users.filter((user) => { 
-        return user.name === name
-    }).length;
-    //console.log('### users', users)
-    if(isConflic) return res.status(409).end();
+    // const isConflic = users.filter((user) => { 
+    //     return user.name === name
+    // }).length;
+    //if(isConflic) return res.status(409).end();
 
-    const id = Date.now();
-    const user = {id, name};
-    users.push(user);
-    res.status(201).json(user);
+    // const id = Date.now();
+    // const user = {id, name};
+    // users.push(user);
+    
+    models.User.create({
+        name
+    }).then(user=> {
+        res.status(201).json(user);
+    }).catch(err=> {
+        // console.log(err);
+        if(err.name === 'SequelizeUniqueConstraintError'){
+            return res.status(409).end()
+        }
+        res.status(500).end()
+    })
 };
 
 const update = (req, res)=> {
@@ -65,19 +83,32 @@ const update = (req, res)=> {
     const name = req.body.name;
     if(!name) return res.status(400).end();
     
-    const isConflict = users.filter((user)=> {
-        return user.name === name
-    }).length;
-    if(isConflict) return res.status(409).end();
+    // const isConflict = users.filter((user)=> {
+    //     return user.name === name
+    // }).length;
+    // if(isConflict) return res.status(409).end();
 
-    const user = users.filter((user)=>{
-        return user.id === id
-    })[0];
-    if(!user) return res.status(404).end();
+    // const user = users.filter((user)=>{
+    //     return user.id === id
+    // })[0];
+    // if(!user) return res.status(404).end();
+    models.User.findOne({
+        where: {id}
+    }).then(user=> {
+        if(!user) return res.status(404).end();
+        user.name = name;
+        user.save()
+            .then(_=> {
+                res.json(user);
+            }).catch(err=> {
+                // console.log(err);
+                if(err.name === 'SequelizeUniqueConstraintError'){
+                    return res.status(409).end()
+                }
+            })
 
-    user.name = name;
-
-    res.json(user);
+    })
+    
 };
 
 module.exports = {

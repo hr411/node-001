@@ -13,6 +13,7 @@ app.use(bodyParse.json()) // for parsing application/json
 app.use(bodyParse.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.use('/users',user);
+app.use('/photo',photo);
 
 module.exports = app;
 

@@ -10,7 +10,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha api/user/user.spec.js --timeout 10000",
+    "test": "NODE_ENV=test mocha api/user/user.spec.js --timeout 10000 -w",
     "start": "node bin/www.js"
   },
   "repository": {
